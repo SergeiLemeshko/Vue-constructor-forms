@@ -15,35 +15,57 @@
             </div>
         </div>
         <div class="center">
-          <!-- <MyFields /> -->
           <template v-if="hideFields">
             <div>
               <h3>Скрытые поля</h3>
               <select @click.prevent="clickSelect" class="center-select">
                 <option value="">Добавить поле</option>
-                <option value="InpNum">Input Number</option>
-                <option value="InpText">Input Text</option>
-                <option value="Select">Select</option>
+                <option value="InpNum">Добавить Input Number</option>
+                <option value="InpText">Добавить Input Text</option>
+                <option value="Select">Добавить Select</option>
+                <option value="SelectMult">Добавить Select multiple</option>
               </select>
             </div>
             <div>
               <h3>Поля</h3>
               <div v-for="el in arrPlaceholders" class="center-contact">
                 <p>{{ el }}</p>
-                <p>Контакт</p>
-                <p>Удалить поле</p>
               </div>
-              <div v-for="(input) in arrFields">
+              <div v-for="(input, i) in arrFields">
                 <div class="form-control">
-                  <label :for="input.label">{{ input.label }}</label>
-                  <input @blur="blurInput" v-model="inpPlaceholder" type="text" :id="input.label" :placeholder="acceptPlaceholder">
+                  <p>Контакт</p>
+                  <p @click="deleteInpNum">Удалить поле</p>
+                  <label :for="input.label"></label>
+                  <input @blur="blurInput" v-model="inpPlaceholder" type="text" :id="input.label" :placeholder="arrPlaceholders[i]">
+                </div>
+                <input type="checkbox" id="checkbox" v-model="checkedInp[`input${i}`]">
+                <label for="checkbox"></label>
+              </div>
+              <div v-for="(sel, k) in arrFieldsSelect">
+                <div class="form-control">
+                  <p @click="deleteSelect">Удалить поле</p>
+                  <select class="center-select">
+                    <option v-for="opt in selectOptions">{{ opt.name }}</option>
+                  </select>
+                  <input type="checkbox" id="checkbox" v-model="checkedSel[`sel${k}`]">
+                  <label for="checkbox"></label>
+                </div>
+              </div>
+              <div v-for="(sel, j) in arrFieldsSelectMult" multiple>
+                <div class="form-control">
+                  <p @click="deleteSelectMult">Удалить поле</p>
+                  <select class="center-select">
+                    <option v-for="opt in selectOptions">{{ opt.age }}</option>
+                  </select>
+                  <input type="checkbox" id="checkbox" v-model="checkedSelMult[`sel${j}`]">
+                  <label for="checkbox"></label>
                 </div>
               </div>
             </div>
           </template>
         </div>
         <div class="right">
-            <p>content content content content content content content contentcontentv content content content content content</p>
+          <MyForms></MyForms>
         </div>
     </section>
 </template>
@@ -51,11 +73,11 @@
 <script setup>
   import { useFormStore } from '@/store/createForm.js'
   import { storeToRefs } from 'pinia'
-  // import MyFields from '@/components/MyFields.vue'
+  import MyForms from '@/components/MyForms.vue'
 
-  const store = useFormStore()
-  const { hideFields, arrFields, inpPlaceholder, acceptPlaceholder, arrPlaceholders } = storeToRefs(store)
-  const { showBlockField, clickSelect, blurInput } = store
+  const store = useFormStore();
+  const { hideFields, arrFields, inpPlaceholder, arrPlaceholders, arrFieldsSelect, selectOptions, arrFieldsSelectMult, checkedInp, checkedSel, checkedSelMult } = storeToRefs(store);
+  const { showBlockField, clickSelect, blurInput, deleteInpNum, deleteSelect, deleteSelectMult} = store;
 </script>
 
 <style lang="scss" scoped>
@@ -85,7 +107,7 @@
 .right {
     width: calc(100% - 33%);
     flex-direction: column;
-    background-color: #3EA748;
+    background-color: #a7a7a7;
     
     p {
         display: inline-block;
