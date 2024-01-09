@@ -46,4 +46,8 @@
   border: 1px dotted #3EA748;
   border-radius: 8px;
 }
+
+.form-control {
+  background-color: #3EA748;
+}
 </style>
